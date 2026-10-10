@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#11845A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="حملات واتساب">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="https://n8n.anoon.space/webhook/wac-file?f=icon180">
+<link rel="icon" type="image/png" href="https://n8n.anoon.space/webhook/wac-file?f=icon192">
+<title>حملات واتساب · النون</title>
+<style>
+  :root { --bg: #EDEFF6; --ink: #161A3A; --go: #11845A; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0E1124; --ink: #ECEEFA; --go: #3BC48B; } }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--ink); font-family: "Segoe UI", Tahoma, sans-serif; text-align: center; padding: 16px; box-sizing: border-box; }
+  button { font: inherit; background: var(--go); color: #fff; border: 0; border-radius: 14px; padding: 12px 22px; margin-top: 14px; }
+</style>
+</head>
+<body>
+<p id="m">جاري التحميل…</p>
+<script>
+/* حملات واتساب — النون. هاي الصفحة بتفتح البرنامج اللي على n8n، وبتخلي الإشعارات تشتغل على التلفون. */
+(async () => {
+  const API = 'https://n8n.anoon.space/webhook/';
+  const m = document.getElementById('m');
+  try {
+    const r = await fetch(API + 'wac', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    let html = await r.text();
+    const cfg = '<script>window.WAC_API=' + JSON.stringify(API) + ';</scr' + 'ipt>'
+      + '<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="https://n8n.anoon.space/webhook/wac-file?f=icon180">';
+    html = html.replace(/<head>/i, '<head>' + cfg).replace(/href="wac-file\?f=/g, 'href="' + API + 'wac-file?f=');
+    document.open(); document.write(html); document.close();
+  } catch (e) {
+    m.innerHTML = 'ما قدرت أوصل للبرنامج. تأكد إن الإنترنت شغّال.<br><button onclick="location.reload()">جرّب مرة ثانية</button>';
+  }
+})();
+</script>
+</body>
+</html>
